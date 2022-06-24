@@ -1,6 +1,8 @@
 import os
 import logging
 from pathlib import Path
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 import psycopg2
 from jinja2 import FileSystemLoader, Environment
@@ -14,6 +16,8 @@ logger = logging.getLogger(__name__)
 
 
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+EMAIL_SENDER = os.getenv('EMAIL_SENDER')
+EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
 
 
 def is_valid_message(message: dict) -> bool:
@@ -24,11 +28,27 @@ def is_valid_message(message: dict) -> bool:
         return False
 
 
+def get_email(template_path: str, template_params: dict,
+              subject: str, email: str):
+    email_message = MIMEMultipart('alternative')
+
+    email_message['From'] = EMAIL_SENDER
+    email_message['To'] = email
+    email_message['Subject'] = subject
+
+    template = load_template(template_path, template_params)
+    html_template = MIMEText(template, 'html')
+    email_message.attach(html_template)
+    return email_message
+
+
 def load_template(template_path: str, template_params: dict) -> str:
     path = Path(__file__).parent.parent.joinpath('templates')
+
     template_loader = FileSystemLoader(searchpath=path)
     template_env = Environment(loader=template_loader)
     template = template_env.get_template(template_path)
+
     return template.render(**template_params)
 
 

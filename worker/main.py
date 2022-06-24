@@ -1,31 +1,27 @@
 import json
 import sys
-import os
 import logging
+import smtplib
+import ssl
 
 import pika
-import sendgrid
-from sendgrid.helpers.mail import Email, To, Content, Mail
 
 from logger import configure_logger
-from utils import is_valid_message, update_history, load_template, RABBITMQ_HOST
+from utils import (is_valid_message, update_history, get_email,
+                   RABBITMQ_HOST, EMAIL_PASSWORD, EMAIL_SENDER)
 
 
 logger = logging.getLogger(__name__)
-sg = sendgrid.SendGridAPIClient(api_key=os.environ.get('SENDGRID_API_KEY'))
 
 
 def send_email(template_path: str, template_params: dict,
                subject: str, email: str):
-    from_email = Email("test@example.com")
-    to_email = To(email)
-    template = load_template(template_path, template_params)
-    content = Content(mime_type="text/html", content=template)
-    mail = Mail(from_email, to_email, subject, content)
-    # response = sg.client.mail.send.post(request_body=mail.get())
-    # print(response.status_code)
-    # print(response.body)
-    # print(response.headers)
+    email_message = get_email(template_path, template_params, subject, email)
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
+        smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        smtp.sendmail(EMAIL_SENDER, email, email_message.as_string())
+        logger.info(f"Email sent to: {email}")
 
 
 def send_notification(ch, method, properties, body):
