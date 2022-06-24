@@ -1,15 +1,13 @@
-import os
 import logging
-from pathlib import Path
+import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from pathlib import Path
 
 import psycopg2
-from jinja2 import FileSystemLoader, Environment
 from dotenv import load_dotenv
-
+from jinja2 import Environment, FileSystemLoader
 from schema import NotificationSchema
-
 
 load_dotenv()
 logger = logging.getLogger(__name__)

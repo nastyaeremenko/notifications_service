@@ -1,15 +1,13 @@
 import json
-import sys
 import logging
 import smtplib
 import ssl
+import sys
 
 import pika
-
 from logger import configure_logger
-from utils import (is_valid_message, update_history, get_email,
-                   RABBITMQ_HOST, EMAIL_PASSWORD, EMAIL_SENDER)
-
+from utils import (EMAIL_PASSWORD, EMAIL_SENDER, RABBITMQ_HOST, get_email,
+                   is_valid_message, update_history)
 
 logger = logging.getLogger(__name__)
 
@@ -26,15 +24,22 @@ def send_email(template_path: str, template_params: dict,
 
 def send_notification(ch, method, properties, body):
     message = json.loads(body)
+    logger.info(" [x] Received %r" % message)
+
     if is_valid_message(message):
         notification_id = message.pop('notification_id')
-        logger.info(" [x] Received %r" % message)
+        is_last = message.pop('is_last')
         send_email(**message)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+        logger.info(" [x] Done")
     else:
+        ch.basic_reject(delivery_tag=method.delivery_tag, requeue=False)
         logger.error(f"{message} is not valid")
-    logger.info(" [x] Done")
-    ch.basic_ack(delivery_tag=method.delivery_tag)
-    # update_history(notification_id)
+        return
+
+    if is_last:
+        # update_history(notification_id)
+        logger.info(f"Notification with id: {notification_id} is completed")
 
 
 if __name__ == '__main__':

@@ -1,6 +1,6 @@
-import pika
 import json
 
+import pika
 
 connection = pika.BlockingConnection(
     pika.ConnectionParameters(host='localhost'))
@@ -18,7 +18,8 @@ message = {
         "last_name": "Vokhmin"
     },
     "subject": 'some subject',
-    "email": 'boxdima1@gmail.com'
+    "email": 'boxdima1@gmail.com',
+    "is_last": True
 }
 channel.basic_publish(
     exchange='',

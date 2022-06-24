@@ -8,3 +8,4 @@ class NotificationSchema:
     template_params: dict
     subject: str
     email: str
+    is_last: bool
