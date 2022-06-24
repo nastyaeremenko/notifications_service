@@ -6,7 +6,11 @@ connection = pika.BlockingConnection(
     pika.ConnectionParameters(host='localhost'))
 channel = connection.channel()
 
-channel.queue_declare(queue='default', durable=True)
+# Замените 'default' на название очереди для определенного сценария. Они лежат в файле queue.txt
+queue_name = 'default'
+
+channel.queue_declare(queue=queue_name,
+                      durable=True)
 
 message = {
     "notification_id": 1,
@@ -23,7 +27,7 @@ message = {
 }
 channel.basic_publish(
     exchange='',
-    routing_key='default',
+    routing_key=queue_name,
     body=json.dumps(message),
     properties=pika.BasicProperties(
         delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE
