@@ -1,0 +1,4 @@
+Имена очередей:
+1) Подтверждение имейла - email_confirm
+2) CronJob с пятничной подборкой - friday_cron
+3) Admin CronJob - admin_cron
