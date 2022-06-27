@@ -1,4 +1,4 @@
-from asyncpg import Pool
+from asyncpg import Pool, Record
 from fastapi import Depends
 
 from core.schema import ORJSONModel
@@ -12,7 +12,7 @@ class BasePostgresRepository(AbstractRepository):
     def __init__(self, pool: Pool = Depends(get_repository_pool)):
         self.pool = pool
 
-    async def create(self, item: ORJSONModel) -> ORJSONModel:
+    async def create(self, item: ORJSONModel) -> ORJSONModel or None:
         fields = []
         values = []
         [(fields.append(str(f)), values.append(str(v))) for f, v in item.dict(exclude_none=True).items()]
@@ -26,7 +26,7 @@ class BasePostgresRepository(AbstractRepository):
         RETURNING id, {fields};"""
         await self.fetch(query, values)
 
-    async def fetch(self, query: str, params: list) -> tuple:
+    async def fetch(self, query: str, params: list) -> list[Record]:
         async with self.pool.acquire() as conn:
             return await conn.fetch(query, *params, timeout=5)
 

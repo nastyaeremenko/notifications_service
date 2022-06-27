@@ -1,7 +1,10 @@
 from pydantic import BaseModel, Field
+from collections import namedtuple
 from datetime import datetime
 from enum import Enum
 import orjson
+
+from core.settings import CHECK_EMAIL_TEMPLATE_ID
 
 
 class HistoryStatus(Enum):
@@ -32,11 +35,13 @@ class Notification(ORJSONModel):
     notification_id: int = Field(None, description='ID уведомления.')
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
-    template_id: int = Field(..., description='ID шаблона по которому осуществляется отправка email.')
-    template_params: str = Field(..., description='Параметры для вставки в шаблон.')
+    template_id: int = Field(
+        CHECK_EMAIL_TEMPLATE_ID, description='ID шаблона по которому осуществляется отправка email.'
+    )
+    template_params: dict = Field(..., description='Параметры для вставки в шаблон.')
     role: str = Field(None, description='Роль пользователей для отправки email.')
     permission: str = Field(None, description='Уровень прав пользователей для отправки email.')
-    email: str = Field(None, description='email пользователя для отправки email.')
+    email: str = Field(None, description='Email пользователя для отправки email.')
 
 
 class History(ORJSONModel):
@@ -51,3 +56,15 @@ class Task(ORJSONModel):
     execution_time: datetime = Field(default_factory=datetime.now)
     notification_id: int = Field(..., description='ID уведомления.')
     status: TaskStatus = Field(..., 'Статус выполнения задачи.')
+
+
+class Template(ORJSONModel):
+    path: str = Field(..., description='Адрес шаблона.')
+    params: dict = Field(..., description='Параметры шаблона.')
+
+
+class MailCheckerMessage(ORJSONModel):
+    notification_id: int = Field(None, description='ID уведомления.')
+    template_path: str = Field(..., description='Адрес шаблона.')
+    template_params: dict = Field(..., description='Параметры шаблона.')
+    email: str = Field(None, description='Email пользователя для отправки email.')
