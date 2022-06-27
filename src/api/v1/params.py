@@ -5,7 +5,7 @@ from core.schema import ORJSONModel
 
 class CheckEmail(ORJSONModel):
     email: EmailStr = Field(..., description='Email адресс пользователя для проверки.')
-    username: str = Field(..., description='Пользовательский логин.')
+    template_params: dict = Field(..., description='Параметры шаблона')
 
 
 class AdminNotification(ORJSONModel):

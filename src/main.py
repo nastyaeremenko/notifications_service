@@ -1,9 +1,15 @@
 # import json
 import logging
 import uvicorn
+import pika
+import asyncpg
+import backoff
 
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+
+from core.backoff import backoff_hdlr, backoff_hdlr_success
+from core import dependencies
 from core import settings as s
 from core.logger import LOGGING
 from api.v1 import notifications
@@ -19,12 +25,29 @@ app = FastAPI(
 
 @app.on_event('startup')
 async def startup():
-    pass
+    dependencies.queque = backoff.on_exception(
+        wait_gen=backoff.expo,
+        max_tries=s.BACKOFF_RETRIES,
+        max_time=s.BACKOFF_MAX_TIME,
+        exception=Exception,
+        on_backoff=backoff_hdlr,
+        on_success=backoff_hdlr_success,
+    )(pika.BlockingConnection)(pika.ConnectionParameters(host=s.RABBIT_HOST))
+
+    dependencies.pool = await backoff.on_exception(
+        wait_gen=backoff.expo,
+        max_tries=s.BACKOFF_RETRIES,
+        max_time=s.BACKOFF_MAX_TIME,
+        exception=Exception,
+        on_backoff=backoff_hdlr,
+        on_success=backoff_hdlr_success,
+    )(asyncpg.create_pool)(dsn=s.DB_DSN)
 
 
 @app.on_event('shutdown')
 async def shutdown():
-    pass
+    dependencies.pool.close()
+    dependencies.queque.close()
 
 
 app.include_router(notifications.router,
@@ -33,7 +56,6 @@ app.include_router(notifications.router,
 
 
 if __name__ == '__main__':
-    uvicorn.config.LOGGING_CONFIG
     uvicorn.run(
         'main:app',
         host='localhost',
