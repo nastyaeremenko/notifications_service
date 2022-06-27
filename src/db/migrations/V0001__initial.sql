@@ -14,8 +14,8 @@ CREATE TYPE "task_status" AS ENUM (
 
 CREATE TABLE "notification" (
   "id" SERIAL PRIMARY KEY,
-  "created_at" datetime NOT NULL,
-  "updated_at" datetime NOT NULL,
+  "created_at" timestamp NOT NULL,
+  "updated_at" timestamp NOT NULL,
   "template_id" int NOT NULL,
   "template_params" json,
   "role" varchar,
@@ -25,8 +25,8 @@ CREATE TABLE "notification" (
 
 CREATE TABLE "template" (
   "id" SERIAL PRIMARY KEY,
-  "created_at" datetime NOT NULL,
-  "updated_at" datetime NOT NULL,
+  "created_at" timestamp NOT NULL,
+  "updated_at" timestamp NOT NULL,
   "name" varchar UNIQUE NOT NULL,
   "description" varchar NOT NULL,
   "path" varchar UNIQUE NOT NULL,
@@ -35,16 +35,16 @@ CREATE TABLE "template" (
 
 CREATE TABLE "history" (
   "id" SERIAL PRIMARY KEY,
-  "created_at" datetime NOT NULL,
+  "created_at" timestamp NOT NULL,
   "notification_id" int,
   "status" history_status NOT NULL
 );
 
 CREATE TABLE "task" (
   "id" SERIAL PRIMARY KEY,
-  "created_at" datetime,
-  "updated_at" datetime,
-  "execution_time" datetime,
+  "created_at" timestamp,
+  "updated_at" timestamp,
+  "execution_time" timestamp,
   "notification_id" int,
   "status" task_status
 );
