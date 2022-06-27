@@ -1,0 +1,7 @@
+create_notification = "INSERT INTO notification (template_id)) VALUES(%s)"
+create_history = "INSERT INTO history (notification_id, status) VALUES(%s, %s)"
+check_task = "SELECT * FROM task WHERE created_at <= %s and status = 'created'"
+change_task_status = "UPDATE task SET status = %s WHERE notification_id = %s;"
+get_notification_data = "SELECT id, template_params FROM notification WHERE id = %s"
+get_template_path = "SELECT template_path FROM template WHERE id = %s"
+get_notification_id_in_task = "SELECT notification_id FROM task WHERE id = %s"
