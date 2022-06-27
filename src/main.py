@@ -23,14 +23,14 @@ app = FastAPI(
 
 @app.on_event('startup')
 async def startup():
-    dependencies.queque = backoff.on_exception(
-        wait_gen=backoff.expo,
-        max_tries=s.BACKOFF_RETRIES,
-        max_time=s.BACKOFF_MAX_TIME,
-        exception=Exception,
-        on_backoff=backoff_hdlr,
-        on_success=backoff_hdlr_success,
-    )(pika.BlockingConnection)(pika.ConnectionParameters(host=s.RABBIT_HOST))
+    # dependencies.queque = backoff.on_exception(
+    #     wait_gen=backoff.expo,
+    #     max_tries=s.BACKOFF_RETRIES,
+    #     max_time=s.BACKOFF_MAX_TIME,
+    #     exception=Exception,
+    #     on_backoff=backoff_hdlr,
+    #     on_success=backoff_hdlr_success,
+    # )(pika.BlockingConnection)(pika.ConnectionParameters(host=s.RABBIT_HOST))
 
     dependencies.pool = await backoff.on_exception(
         wait_gen=backoff.expo,

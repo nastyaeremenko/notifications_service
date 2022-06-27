@@ -1,4 +1,3 @@
-from collections import namedtuple
 from datetime import datetime
 from enum import Enum
 
@@ -56,7 +55,7 @@ class Task(ORJSONModel):
     updated_at: datetime = Field(default_factory=datetime.now)
     execution_time: datetime = Field(default_factory=datetime.now)
     notification_id: int = Field(..., description='ID уведомления.')
-    status: TaskStatus = Field(..., 'Статус выполнения задачи.')
+    status: TaskStatus = Field(..., description='Статус выполнения задачи.')
 
 
 class Template(ORJSONModel):
