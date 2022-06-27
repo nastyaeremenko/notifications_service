@@ -1,6 +1,8 @@
 import json
+import logging
 from abc import abstractmethod
 from datetime import datetime
+from logging import config as logging_config
 
 import pika
 from apscheduler.schedulers.blocking import BlockingScheduler
@@ -8,7 +10,10 @@ from apscheduler.schedulers.blocking import BlockingScheduler
 import queries
 from api_utils import (get_user_data, get_popular_movies,
                        get_movies_data)
+from config import LOG_CONFIG
 from db_utils import DBConnector
+
+logging_config.dictConfig(LOG_CONFIG)
 
 
 class CronJob:
@@ -50,8 +55,8 @@ class CronJob:
                           **self.periodicity_param)
         try:
             scheduler.start()
-        except (KeyboardInterrupt, SystemExit):
-            pass
+        except (KeyboardInterrupt, SystemExit) as e:
+            logging.error(e)
 
 
 class AdminCronJob(CronJob):
@@ -75,7 +80,7 @@ class AdminCronJob(CronJob):
 
     def _db_interaction(self, task_id=None):
         if not task_id:
-            pass
+            logging.error('Отсутствует task_id в AdminCronJob.')
         notification_id = self.db_conn.select(queries.get_notification_id_in_task, [task_id])
         self.db_conn.create_or_update(queries.create_history, [notification_id, 'in_progress'])
         self.db_conn.create_or_update(queries.change_task_status, ['in_progress', notification_id])

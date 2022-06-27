@@ -1,13 +1,8 @@
 import os
-from logging import config as logging_config
 
 from dotenv import load_dotenv
 
-from cron_job.logger import LOG_CONFIG
-
 load_dotenv()
-# Применяем настройки логирования
-logging_config.dictConfig(LOG_CONFIG)
 
 # Настройки Postgres
 DB_NAME = os.getenv('DB_NAME')
