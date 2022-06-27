@@ -1,8 +1,8 @@
 import pika
 from fastapi import Depends
 
-from core.settings import RABBIT_CHECK_EMAIL_QUEUE_NAME
 from core.dependencies import get_queque_connection
+from core.settings import RABBIT_CHECK_EMAIL_QUEUE_NAME
 from db.abstract import AbstractQueuePublisher
 
 

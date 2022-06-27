@@ -1,19 +1,17 @@
-# import json
 import logging
-import uvicorn
-import pika
+
 import asyncpg
 import backoff
-
+import pika
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
-from core.backoff import backoff_hdlr, backoff_hdlr_success
+from api.v1 import notifications
 from core import dependencies
 from core import settings as s
+from core.backoff import backoff_hdlr, backoff_hdlr_success
 from core.logger import LOGGING
-from api.v1 import notifications
-
 
 app = FastAPI(
     title=s.PROJECT_NAME,

@@ -1,8 +1,8 @@
 from asyncpg import Pool, Record
 from fastapi import Depends
 
-from core.schema import ORJSONModel
 from core.dependencies import get_repository_pool
+from core.schema import ORJSONModel
 from db.abstract import AbstractRepository
 
 

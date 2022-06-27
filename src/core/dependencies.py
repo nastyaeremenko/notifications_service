@@ -1,4 +1,5 @@
-from db.postgres.current import NotificationRepository, HistoryRepository, TaskRepository, TemplateRepository
+from db.postgres.current import (HistoryRepository, NotificationRepository,
+                                 TaskRepository, TemplateRepository)
 from db.queque.current import EmailCheckerPublisher
 
 pool = None

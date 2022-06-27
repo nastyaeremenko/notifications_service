@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field
 from collections import namedtuple
 from datetime import datetime
 from enum import Enum
+
 import orjson
+from pydantic import BaseModel, Field
 
 from core.settings import CHECK_EMAIL_TEMPLATE_ID
 

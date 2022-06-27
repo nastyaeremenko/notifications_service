@@ -1,11 +1,14 @@
-from fastapi import APIRouter, Depends, Query
 from http import HTTPStatus
 
-from api.v1.params import CheckEmail, AdminNotification
-from core.dependencies import (get_history_repository, get_notification_repository,
-                               get_email_cheker_queue_publisher, get_template_repository,
-                               get_task_repository)
-from core.schema import Notification, History, HistoryStatus, MailCheckerMessage, Task
+from fastapi import APIRouter, Depends, Query
+
+from api.v1.params import AdminNotification, CheckEmail
+from core.dependencies import (get_email_cheker_queue_publisher,
+                               get_history_repository,
+                               get_notification_repository,
+                               get_task_repository, get_template_repository)
+from core.schema import (History, HistoryStatus, MailCheckerMessage,
+                         Notification, Task)
 from core.settings import CHECK_EMAIL_TEMPLATE_ID
 
 router = APIRouter()

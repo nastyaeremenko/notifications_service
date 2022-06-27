@@ -1,5 +1,7 @@
-from pydantic import Field, EmailStr
 from datetime import datetime
+
+from pydantic import EmailStr, Field
+
 from core.schema import ORJSONModel
 
 
