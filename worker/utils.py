@@ -3,6 +3,7 @@ import os
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
+from datetime import datetime
 
 import psycopg2
 from dotenv import load_dotenv
@@ -52,17 +53,18 @@ def load_template(template_path: str, template_params: dict) -> str:
 
 def update_history(notification_id: int):
     dsn = {
-        'dbname': os.getenv('DB_NAME'),
-        'user': os.getenv('DB_USER'),
-        'password': os.getenv('DB_PASSWORD'),
-        'host': os.getenv('DB_HOST'),
+        'dbname': os.getenv('POSTGRES_DB'),
+        'user': os.getenv('POSTGRES_USER'),
+        'password': os.getenv('POSTGRES_PASSWORD'),
+        'host': os.getenv('POSTGRES_HOST'),
         'port': 5432
     }
     connection = psycopg2.connect(**dsn)
     cursor = connection.cursor()
     try:
-        cursor.execute("INSERT INTO history (notification_id, status) VALUES(%s, %s)",
-                       (notification_id, 'done'))
+        cursor.execute("INSERT INTO history (created_at, notification_id, status) VALUES(%s, %s, %s)",
+                       (datetime.now(), notification_id, 'done'))
+        logger.info(f"History is updated for notification_id: {notification_id}")
     except Exception as e:
         logger.error(f"History update error: {e}")
     finally:

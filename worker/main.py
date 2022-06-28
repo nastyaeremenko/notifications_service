@@ -38,7 +38,7 @@ def send_notification(ch, method, properties, body):
         return
 
     if is_last:
-        # update_history(notification_id)
+        update_history(notification_id)
         logger.info(f"Notification with id: {notification_id} is completed")
 
 

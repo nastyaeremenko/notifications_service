@@ -1,7 +1,7 @@
 version: "3.8"
 services:
     rabbitmq3:
-        container_name: "rabbitmq"
+        container_name: rabbitmq-notification
         image: rabbitmq:3.8-management-alpine
         ports:
             - '5672:5672'
@@ -9,7 +9,18 @@ services:
         volumes:
             - rabbit-data:/var/lib/rabbitmq/
             - rabbit-log:/var/log/rabbitmq
+    db:
+        container_name: postgres-notification
+        image: postgres:13
+        volumes:
+          - postgres_data:/var/lib/postgresql/data/
+        ports:
+          - '5432:5432'
+        env_file:
+          - .env
 
 volumes:
   rabbit-data:
   rabbit-log:
+  postgres_data:
+    name: postgres_data
