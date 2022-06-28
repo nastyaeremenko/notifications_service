@@ -17,6 +17,7 @@ logger = logging.getLogger(__name__)
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 EMAIL_SENDER = os.getenv('EMAIL_SENDER')
 EMAIL_PASSWORD = os.getenv('EMAIL_PASSWORD')
+QUEUE = os.getenv('QUEUE')
 
 
 def is_valid_message(message: dict) -> bool:
@@ -59,6 +60,7 @@ def update_history(notification_id: int):
         'host': os.getenv('POSTGRES_HOST'),
         'port': 5432
     }
+    logger.info(dsn)
     connection = psycopg2.connect(**dsn)
     cursor = connection.cursor()
     try:
