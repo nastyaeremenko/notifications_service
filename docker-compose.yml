@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+    rabbitmq3:
+        container_name: "rabbitmq"
+        image: rabbitmq:3.8-management-alpine
+        ports:
+            - '5672:5672'
+            - '15672:15672'
+        volumes:
+            - rabbit-data:/var/lib/rabbitmq/
+            - rabbit-log:/var/log/rabbitmq
+
+    cron_job:
+        build:
+            context: .
+            dockerfile: cron_job/Dockerfile
+        container_name: cron-job
+        working_dir: /cron_job/
+        volumes:
+            - ./cron_job:/cron_job/
+        env_file:
+            - .env
+        depends_on:
+            - rabbitmq3
+        command: python run.py
+
+volumes:
+  rabbit-data:
+  rabbit-log:
