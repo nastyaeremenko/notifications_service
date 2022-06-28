@@ -19,5 +19,5 @@ class TemplateRepository(BasePostgresRepository):
 
     async def get_by_id(self, template_id) -> Template:
         query = f"""SELECT path, params FROM template WHERE id = '{template_id}';"""
-        data = self.fetch(query, [])[0]
-        return Template(**data)
+        data = await self.fetch(query, [])
+        return Template(**data[0])
