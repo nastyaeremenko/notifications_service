@@ -183,5 +183,5 @@ if __name__ == '__main__':
     SchedulerCronJob(
         {'day_of_week': 'fri'}, 'cron', channel, 'friday_cron', 2, DBConnector
     )
-
+    print("Закрывает соединение")
     connection.close()

@@ -25,15 +25,19 @@ services:
             context: .
             dockerfile: cron_job/Dockerfile
         container_name: cron-job
-        working_dir: /cron_job/
+        restart: on-failure
         volumes:
             - ./cron_job:/cron_job/
+        environment:
+            - WAIT_HOSTS=rabbitmq3:5672
+            - WAIT_HOSTS_TIMEOUT=300
+            - WAIT_SLEEP_INTERVAL=30
+            - WAIT_HOST_CONNECT_TIMEOUT=30
         env_file:
             - prod.env
         depends_on:
             - rabbitmq3
             - db
-        command: python main.py
 
     worker:
         build:
@@ -43,6 +47,11 @@ services:
         restart: on-failure
         volumes:
             - ./worker:/usr/src/worker
+        environment:
+            - WAIT_HOSTS=rabbitmq3:5672
+            - WAIT_HOSTS_TIMEOUT=300
+            - WAIT_SLEEP_INTERVAL=30
+            - WAIT_HOST_CONNECT_TIMEOUT=30
         env_file:
             - prod.env
         depends_on:
