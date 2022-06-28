@@ -29,10 +29,10 @@ class ORJSONModel(BaseModel):
     class Config:
         json_loads = orjson.loads
         json_dumps = orjson_dumps
+        use_enum_values = True
 
 
 class Notification(ORJSONModel):
-    notification_id: int = Field(None, description='ID уведомления.')
     created_at: datetime = Field(default_factory=datetime.now)
     updated_at: datetime = Field(default_factory=datetime.now)
     template_id: int = Field(
@@ -60,7 +60,6 @@ class Task(ORJSONModel):
 
 class Template(ORJSONModel):
     path: str = Field(..., description='Адрес шаблона.')
-    params: dict = Field(..., description='Параметры шаблона.')
 
 
 class MailCheckerMessage(ORJSONModel):
@@ -68,3 +67,5 @@ class MailCheckerMessage(ORJSONModel):
     template_path: str = Field(..., description='Адрес шаблона.')
     template_params: dict = Field(..., description='Параметры шаблона.')
     email: str = Field(None, description='Email пользователя для отправки email.')
+    subject: str = Field(..., description='Subject для имейла')
+    is_last: bool = Field(..., description='Идентификатор если последний имейл')

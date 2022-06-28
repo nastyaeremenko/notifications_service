@@ -1,10 +1,10 @@
 pool = None
-queque = None
+queue = None
 
 
 def get_repository_pool():
     return pool
 
 
-def get_queque_connection():
-    return queque
+def get_queue_connection():
+    return queue

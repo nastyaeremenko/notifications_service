@@ -21,7 +21,7 @@ class AbstractQueuePublisher(ABC):
     Абстрактный класс для работы с очередью.
     """
     @abstractmethod
-    async def publish(self, message: str) -> None:
+    def publish(self, message: str) -> None:
         """
         Метод для отправки сообщения в очередь;
         :param message: сообщение в формате json-строки;
