@@ -17,6 +17,7 @@ from config import (
     PATH_ANALYTICS_DATA,
     PATH_MOVIES_DATA,
     PATH_USER_DATA,
+    RABBITMQ_HOST
 )
 from db_utils import DBConnector
 from logger import LOG_CONFIG
@@ -170,7 +171,7 @@ class SchedulerCronJob(CronJob):
 
 if __name__ == '__main__':
     connection = pika.BlockingConnection(
-        pika.ConnectionParameters(host='localhost')
+        pika.ConnectionParameters(host=RABBITMQ_HOST)
     )
     channel = connection.channel()
 

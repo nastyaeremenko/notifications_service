@@ -9,19 +9,7 @@ services:
         volumes:
             - rabbit-data:/var/lib/rabbitmq/
             - rabbit-log:/var/log/rabbitmq
-    cron_job:
-        build:
-            context: .
-            dockerfile: cron_job/Dockerfile
-        container_name: cron-job
-        working_dir: /cron_job/
-        volumes:
-            - ./cron_job:/cron_job/
-        env_file:
-            - .env
-        depends_on:
-            - rabbitmq3
-        command: python run.py
+
     db:
         container_name: postgres-notification
         image: postgres:13
@@ -31,6 +19,22 @@ services:
             - '5432:5432'
         env_file:
             - prod.env
+
+    cron_job:
+        build:
+            context: .
+            dockerfile: cron_job/Dockerfile
+        container_name: cron-job
+        working_dir: /cron_job/
+        volumes:
+            - ./cron_job:/cron_job/
+        env_file:
+            - prod.env
+        depends_on:
+            - rabbitmq3
+            - db
+        command: python main.py
+
     worker:
         build:
             context: .
@@ -44,6 +48,7 @@ services:
         depends_on:
             - rabbitmq3
             - db
+
 
 volumes:
   rabbit-data:
