@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Настройки Postgres
-POSTGRES_NAME = os.getenv('POSTGRES_NAME')
+POSTGRES_NAME = os.getenv('POSTGRES_DB', 'notification')
 POSTGRES_USER = os.getenv('POSTGRES_USER')
 POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
 POSTGRES_HOST = os.getenv('POSTGRES_HOST')
@@ -34,3 +34,7 @@ PATH_MOVIES_DATA = os.getenv('PATH_MOVIES_DATA')
 
 # RabbitMQ
 RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+ADMIN_QUEUE = os.getenv('ADMIN_QUEUE', 'admin_cron')
+ADMIN_TEMPLATE_ID = int(os.getenv('ADMIN_TEMPLATE_ID', 1))
+MOVIES_TOP_QUEUE = os.getenv('MOVIES_TOP_QUEUE', 'friday_cron')
+MOVIES_TOP_TEMPLATE_ID = int(os.getenv('MOVIES_TOP_TEMPLATE_ID', 2))

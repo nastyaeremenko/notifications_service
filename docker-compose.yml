@@ -1,4 +1,5 @@
-version: "3.8"
+version: '3.9'
+
 services:
     rabbitmq3:
         container_name: rabbitmq-notification
@@ -15,8 +16,7 @@ services:
         image: postgres:13
         volumes:
             - postgres_data:/var/lib/postgresql/data/
-        ports:
-            - '5432:5432'
+        command: -p $POSTGRES_PORT
         env_file:
             - prod.env
 
@@ -25,7 +25,6 @@ services:
             context: .
             dockerfile: cron_job/Dockerfile
         container_name: cron-job
-        restart: on-failure
         volumes:
             - ./cron_job:/cron_job/
         environment:
@@ -57,7 +56,6 @@ services:
         depends_on:
             - rabbitmq3
             - db
-
 
 volumes:
   rabbit-data:

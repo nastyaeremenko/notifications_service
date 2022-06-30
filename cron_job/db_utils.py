@@ -6,7 +6,7 @@ from config import PG_DSL
 
 class DBConnector:
     def __init__(self):
-        self.db = None
+        self.connection = None
         self.connect()
 
     @backoff()
@@ -17,8 +17,12 @@ class DBConnector:
     def select(self, query, params):
         cursor = self.connection.cursor()
         cursor.execute(query, params)
-        result = cursor.fetchall()
+        records = cursor.fetchall()
         cursor.close()
+        columns_names = [column[0] for column in cursor.description]
+        result = []
+        for record in records:
+            result.append(dict(zip(columns_names, record)))
         return result
 
     @backoff()
