@@ -1,24 +1,13 @@
 import json
 import logging
-import smtplib
-import ssl
 
 import pika
 from logger import configure_logger
-from utils import (EMAIL_PASSWORD, EMAIL_SENDER, RABBITMQ_HOST, get_email,
-                   is_valid_message, update_history, QUEUE)
+from constants import RABBITMQ_HOST, QUEUE, ProviderType
+from utils import is_valid_message, update_history
+from worker.provider.provider_factory import ProviderFactory
 
 logger = logging.getLogger(__name__)
-
-
-def send_email(template_path: str, template_params: dict,
-               subject: str, email: str):
-    email_message = get_email(template_path, template_params, subject, email)
-    context = ssl.create_default_context()
-    with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-        smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
-        smtp.sendmail(EMAIL_SENDER, email, email_message.as_string())
-        logger.info(f"Email sent to: {email}")
 
 
 def send_notification(ch, method, properties, body):
@@ -29,7 +18,8 @@ def send_notification(ch, method, properties, body):
         if is_valid_message(message):
             notification_id = message.pop('notification_id')
             is_last = message.pop('is_last')
-            # send_email(**message)
+            provider = ProviderFactory(ProviderType.email).get_provider()
+            provider.send_message(**message)
             ch.basic_ack(delivery_tag=method.delivery_tag)
             logger.info(" [x] Done")
         else:
