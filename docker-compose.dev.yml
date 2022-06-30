@@ -1,4 +1,5 @@
-version: "3.8"
+version: '3.9'
+
 services:
     rabbitmq3:
         container_name: rabbitmq-notification
@@ -9,6 +10,7 @@ services:
         volumes:
             - rabbit-data:/var/lib/rabbitmq/
             - rabbit-log:/var/log/rabbitmq
+
     db:
         container_name: postgres-notification
         image: postgres:13

@@ -1,4 +1,5 @@
-version: "3.8"
+version: '3.9'
+
 services:
     rabbitmq3:
         container_name: rabbitmq-notification
@@ -9,28 +10,34 @@ services:
         volumes:
             - rabbit-data:/var/lib/rabbitmq/
             - rabbit-log:/var/log/rabbitmq
-    cron_job:
-        build:
-            context: .
-            dockerfile: cron_job/Dockerfile
-        container_name: cron-job
-        working_dir: /cron_job/
-        volumes:
-            - ./cron_job:/cron_job/
-        env_file:
-            - .env
-        depends_on:
-            - rabbitmq3
-        command: python run.py
+
     db:
         container_name: postgres-notification
         image: postgres:13
         volumes:
             - postgres_data:/var/lib/postgresql/data/
-        ports:
-            - '5432:5432'
+        command: -p $POSTGRES_PORT
         env_file:
             - prod.env
+
+    cron_job:
+        build:
+            context: .
+            dockerfile: cron_job/Dockerfile
+        container_name: cron-job
+        volumes:
+            - ./cron_job:/cron_job/
+        environment:
+            - WAIT_HOSTS=rabbitmq3:5672
+            - WAIT_HOSTS_TIMEOUT=300
+            - WAIT_SLEEP_INTERVAL=30
+            - WAIT_HOST_CONNECT_TIMEOUT=30
+        env_file:
+            - prod.env
+        depends_on:
+            - rabbitmq3
+            - db
+
     worker:
         build:
             context: .
@@ -39,6 +46,11 @@ services:
         restart: on-failure
         volumes:
             - ./worker:/usr/src/worker
+        environment:
+            - WAIT_HOSTS=rabbitmq3:5672
+            - WAIT_HOSTS_TIMEOUT=300
+            - WAIT_SLEEP_INTERVAL=30
+            - WAIT_HOST_CONNECT_TIMEOUT=30
         env_file:
             - prod.env
         depends_on:

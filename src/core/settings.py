@@ -3,11 +3,11 @@ import os
 PROJECT_NAME = os.getenv('PROJECT_NAME', 'Notification')
 DEBUG = os.getenv('DEBUG', True)
 
-POSTGRES_DB_NAME = os.getenv('POSTGRES_DB_NAME', 'notification')
-POSTGRES_DB_USER = os.getenv('POSTGRES_DB_USER', 'postgres')
-POSTGRES_DB_PASSWORD = os.getenv('POSTGRES_DB_PASSWORD', '11111111')
-POSTGRES_DB_HOST = os.getenv('POSTGRES_DB_HOST', 'localhost')
-POSTGRES_DB_PORT = os.getenv('POSTGRES_DB_PORT', 5432)
+POSTGRES_DB_NAME = os.getenv('POSTGRES_DB', 'notification')
+POSTGRES_DB_USER = os.getenv('POSTGRES_USER', 'postgres')
+POSTGRES_DB_PASSWORD = os.getenv('POSTGRES_PASSWORD', '12345')
+POSTGRES_DB_HOST = os.getenv('POSTGRES_HOST', 'localhost')
+POSTGRES_DB_PORT = os.getenv('POSTGRES_PORT', 5432)
 DB_DSN = f'postgres://{POSTGRES_DB_USER}:{POSTGRES_DB_PASSWORD}@' \
          f'{POSTGRES_DB_HOST}:{POSTGRES_DB_PORT}/{POSTGRES_DB_NAME}'
 
@@ -15,7 +15,7 @@ CHECK_EMAIL_TEMPLATE_NAME = os.getenv('CHECK_EMAIL_TEMPLATE_NAME', 'email_confir
 CHECK_EMAIL_TEMPLATE_ID = os.getenv('CHECK_EMAIL_TEMPLATE_ID', 1)
 CHECK_EMAIL_TEMPLATE_SUBJECT = os.getenv('CHECK_EMAIL_TEMPLATE_SUBJECT', 'Confirm email')
 
-RABBIT_HOST = os.getenv('RABBIT_HOST', 'localhost')
+RABBIT_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
 RABBIT_CHECK_EMAIL_QUEUE_NAME = os.getenv('RABBIT_CHECK_EMAIL_QUEUE_NAME', 'email_confirm')
 
 LOG_LEVEL = os.getenv('LOG_LEVEL', 'INFO')

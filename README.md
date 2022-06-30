@@ -1,5 +1,24 @@
-# notifications_service
+# Сервис нотификации онлайн-кинотеатра
+## Описание
+Позволяет создавать email-рассылки:
+- от администратора
+- подборку популярных фильмов за прошедшую неделю, каждую пятницу
+- подтверждения email после регистрации
 
-создание файла миграции: python manage.py create_migration -m <migration_name>
-проведение миграции: python manage.py migrate
-запуск приложения: python manage.py run_server
+После запуска кода документацию по API можно посмотреть по ссылке: http://localhost/api/openapi
+
+## Технологии
+- Python 3.9 
+- FastAPI 0.78.0 
+- RabbitMQ 3.8
+- Postgres 13
+
+## Запуск проекта
+1) Поднятие docker контейнеров `docker-compose --env-file prod.env up --build`
+2) Запуск миграций БД `python manage.py migrate`
+
+## Миграции
+Создание файла миграции: `python manage.py create_migration -m <migration_name>`
+
+## Авторы
+Дмитрий Вохмин, Максим Кезиков, Анастасия Еременко

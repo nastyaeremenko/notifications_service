@@ -17,10 +17,10 @@ class APIRequest:
             )
         except Exception as e:
             logging.error(e)
-            raise
+            return None
 
         if response.ok:
             return response.json()
         else:
             logging.error(response.text)
-            raise
+            return None

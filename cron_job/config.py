@@ -5,18 +5,18 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Настройки Postgres
-DB_NAME = os.getenv('DB_NAME')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
-DB_PORT = int(os.getenv('DB_PORT'))
+POSTGRES_NAME = os.getenv('POSTGRES_DB', 'notification')
+POSTGRES_USER = os.getenv('POSTGRES_USER')
+POSTGRES_PASSWORD = os.getenv('POSTGRES_PASSWORD')
+POSTGRES_HOST = os.getenv('POSTGRES_HOST')
+POSTGRES_PORT = int(os.getenv('POSTGRES_PORT'))
 
 PG_DSL = {
-    'dbname': DB_NAME,
-    'user': DB_USER,
-    'password': DB_PASSWORD,
-    'host': DB_HOST,
-    'port': DB_PORT
+    'dbname': POSTGRES_NAME,
+    'user': POSTGRES_USER,
+    'password': POSTGRES_PASSWORD,
+    'host': POSTGRES_HOST,
+    'port': POSTGRES_PORT
 }
 
 # Корень проекта
@@ -31,3 +31,10 @@ API_ANALYTICS_HOST = os.getenv('API_ANALYTICS_HOST')
 PATH_ANALYTICS_DATA = os.getenv('PATH_ANALYTICS_DATA')
 API_MOVIES_HOST = os.getenv('API_MOVIES_HOST')
 PATH_MOVIES_DATA = os.getenv('PATH_MOVIES_DATA')
+
+# RabbitMQ
+RABBITMQ_HOST = os.getenv('RABBITMQ_HOST', 'localhost')
+ADMIN_QUEUE = os.getenv('ADMIN_QUEUE', 'admin_cron')
+ADMIN_TEMPLATE_ID = int(os.getenv('ADMIN_TEMPLATE_ID', 1))
+MOVIES_TOP_QUEUE = os.getenv('MOVIES_TOP_QUEUE', 'friday_cron')
+MOVIES_TOP_TEMPLATE_ID = int(os.getenv('MOVIES_TOP_TEMPLATE_ID', 2))
