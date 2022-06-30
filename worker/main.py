@@ -3,7 +3,7 @@ import logging
 
 import pika
 from logger import configure_logger
-from constants import RABBITMQ_HOST, QUEUE, ProviderType
+from worker.constants import RABBITMQ_HOST, QUEUE, ProviderType
 from utils import is_valid_message, update_history
 from worker.provider.provider_factory import ProviderFactory
 

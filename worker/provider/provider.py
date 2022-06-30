@@ -1,14 +1,12 @@
 from abc import ABC, abstractmethod
-import smtplib
-import ssl
-import logging
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
 
-from worker.constants import EMAIL_PASSWORD, EMAIL_SENDER
+from worker.constants import EMAIL_SENDER
+from worker.provider.email_service import AbstractEmailService, SmtpEmailService
 
 
 class AbstractProvide(ABC):
@@ -19,7 +17,9 @@ class AbstractProvide(ABC):
 
 
 class EmailProvider(AbstractProvide):
-    logger = logging.getLogger(__name__)
+
+    def __init__(self, email_service: AbstractEmailService = SmtpEmailService):
+        self.email_service = email_service
 
     def send_message(self, *args, **kwargs):
         self._send_email(*args, **kwargs)
@@ -27,11 +27,7 @@ class EmailProvider(AbstractProvide):
     def _send_email(self, template_path: str, template_params: dict,
                     subject: str, email: str):
         email_message = self._get_email(template_path, template_params, subject, email)
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-            smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
-            smtp.sendmail(EMAIL_SENDER, email, email_message.as_string())
-            self.logger.info(f"Email sent to: {email}")
+        self.email_service.send_email(email=email, email_message=email_message)
 
     def _get_email(self, template_path: str, template_params: dict,
                    subject: str, email: str):
@@ -48,7 +44,7 @@ class EmailProvider(AbstractProvide):
 
     @staticmethod
     def _load_template(template_path: str, template_params: dict) -> str:
-        path = Path(__file__).parent.parent.joinpath('templates')
+        path = Path(__file__).parent.parent.parent.joinpath('templates')
 
         template_loader = FileSystemLoader(searchpath=path)
         template_env = Environment(loader=template_loader)
@@ -60,10 +56,10 @@ class EmailProvider(AbstractProvide):
 class SmsProvider(AbstractProvide):
 
     def send_message(self, *args, **kwargs):
-        print("Sending message to client through sms")
+        print("Sending a message to the client through sms")
 
 
 class MessangerProvider(AbstractProvide):
 
     def send_message(self, *args, **kwargs):
-        print("Sending message to client through telegram")
+        print("Sending a message to the client through telegram")
