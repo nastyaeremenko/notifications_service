@@ -2,9 +2,10 @@ import json
 import logging
 
 import pika
+
 from logger import configure_logger
-from worker.constants import RABBITMQ_HOST, QUEUE, ProviderType
 from utils import is_valid_message, update_history
+from worker.constants import QUEUE, RABBITMQ_HOST, ProviderType
 from worker.provider.provider_factory import ProviderFactory
 
 logger = logging.getLogger(__name__)

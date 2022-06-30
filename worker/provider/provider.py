@@ -6,7 +6,8 @@ from pathlib import Path
 from jinja2 import Environment, FileSystemLoader
 
 from worker.constants import EMAIL_SENDER
-from worker.provider.email_service import AbstractEmailService, SmtpEmailService
+from worker.provider.email_service import (AbstractEmailService,
+                                           SmtpEmailService)
 
 
 class AbstractProvide(ABC):

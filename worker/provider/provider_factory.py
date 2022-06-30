@@ -1,5 +1,6 @@
 from worker.constants import ProviderType
-from worker.provider.provider import EmailProvider, SmsProvider, MessangerProvider
+from worker.provider.provider import (EmailProvider, MessangerProvider,
+                                      SmsProvider)
 
 
 class ProviderFactory:

@@ -1,7 +1,7 @@
-from abc import ABC, abstractmethod
+import logging
 import smtplib
 import ssl
-import logging
+from abc import ABC, abstractmethod
 
 from worker.constants import EMAIL_PASSWORD, EMAIL_SENDER
 
