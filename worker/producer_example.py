@@ -7,7 +7,7 @@ connection = pika.BlockingConnection(
 channel = connection.channel()
 
 # Замените 'default' на название очереди для определенного сценария. Они лежат в файле queue.txt
-queue_name = 'default'
+queue_name = 'email_confirm'
 
 channel.queue_declare(queue=queue_name,
                       durable=True)
