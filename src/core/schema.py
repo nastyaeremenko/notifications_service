@@ -21,12 +21,6 @@ class TaskStatus(Enum):
     PROCESS_ERROR = 'process_error'
 
 
-class NotificationType(Enum):
-    SMS = 'sms'
-    EMAIL = 'email'
-    TELEGRAM = 'telegram'
-
-
 def orjson_dumps(v, *, default):
     return orjson.dumps(v, default=default).decode()
 
@@ -48,7 +42,6 @@ class Notification(ORJSONModel):
     role: str = Field(None, description='Роль пользователей для отправки email.')
     permission: str = Field(None, description='Уровень прав пользователей для отправки email.')
     email: str = Field(None, description='Email пользователя для отправки email.')
-    notification_type: NotificationType = Field(NotificationType.EMAIL, description='Тип оповещения')
 
 
 class History(ORJSONModel):
